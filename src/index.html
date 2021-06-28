@@ -1,149 +1,366 @@
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Starmask E2E Test Dapp</title>
+    <link rel="icon" type="image/svg" href="stc.svg" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.14.1/css/mdb.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" type="text/css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Starmask E2E Test Dapp</title>
-  <link rel="icon" type="image/svg" href="stc.svg" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.14.1/css/mdb.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="index.css" type="text/css" />
-</head>
-
-<body>
-  <main class="container-fluid">
-    <header>
-      <div id="logo-container">
-        <h1 id="logo-text" class="text-center">
-          E2E Test Dapp
-        </h1>
-        <img id="mm-logo" src="logo-horizontal.png" />
-      </div>
-    </header>
-    <section>
-      <h3 class="card-title">
-        Status
-      </h3>
-
-      <div class="row">
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <p class="info-text alert alert-primary">
-            Network: <span id="network"></span>
-          </p>
+  <body>
+    <main class="container-fluid">
+      <header>
+        <div id="logo-container">
+          <h1 id="logo-text" class="text-center">E2E Test Dapp</h1>
+          <img id="mm-logo" src="logo-horizontal.png" />
         </div>
+      </header>
+      <section>
+        <h3 class="card-title">Status</h3>
 
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <p class="info-text alert alert-secondary">
-            ChainId: <span id="chainId"></span>
-          </p>
-        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <p class="info-text alert alert-primary">
+              Network: <span id="network"></span>
+            </p>
+          </div>
 
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <p class="info-text alert alert-success">
-            SelectedAccount: <span id="accounts"></span>
-          </p>
-        </div>
-      </div>
-    </section>
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <p class="info-text alert alert-secondary">
+              ChainId: <span id="chainId"></span>
+            </p>
+          </div>
 
-    <section>
-      <div class="row d-flex justify-content-center">
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">
-                Basic Actions
-              </h4>
-
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="connectButton" disabled>
-                Connect
-              </button>
-
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="getAccounts" disabled>
-                Get Selected Account
-              </button>
-
-              <p class="info-text alert alert-secondary">
-                SelectedAccount: <span id="getAccountsResult"></span>
-              </p>
-            </div>
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <p class="info-text alert alert-success">
+              SelectedAccount: <span id="accounts"></span>
+            </p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section>
-      <div class="row d-flex justify-content-center">
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">
-                Permissions Actions
-              </h4>
+      <section>
+        <div class="row d-flex justify-content-center">
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Basic Actions</h4>
 
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="requestPermissions" disabled>
-                Request Permissions
-              </button>
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="connectButton"
+                  disabled
+                >
+                  Connect
+                </button>
 
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="getPermissions" disabled>
-                Get Permissions
-              </button>
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="getAccounts"
+                  disabled
+                >
+                  Get Selected Account
+                </button>
 
-              <p class="info-text alert alert-secondary">
-                Permissions result: <span id="permissionsResult"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="row d-flex justify-content-center">
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12 d-flex align-items-stretch">
-          <div class="card full-width">
-            <div class="card-body">
-              <h4 class="card-title">
-                Send STC
-              </h4>
-              <h5 class="card-title">
-                To
-              </h5>
-              <div class="form-outline mb-3">
-                <input id="toAccountInput" type="text" class="form-control form-control-lg"
-                  value="0x46ecE7c1e39fb6943059565E2621b312" />
+                <p class="info-text alert alert-secondary">
+                  SelectedAccount: <span id="getAccountsResult"></span>
+                </p>
               </div>
-
-              <h5 class="card-title">
-                Amount of STC
-              </h5>
-              <div class="form-outline mb-3">
-                <input id="amountInput" type="text" class="form-control form-control-lg" value="0.001" />
-              </div>
-
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="sendButton" disabled>
-                Send
-              </button>
-              <hr />
-              <h4 class="card-title">
-                Contract
-              </h4>
-              <button class="btn btn-primary btn-lg btn-block mb-3" id="callContractButton" disabled>
-                0x1::TransferScripts::peer_to_peer
-              </button>
-
-              <p class="info-text alert alert-secondary">
-                Contract Status: <span id="contractStatus">Not clicked</span>
-              </p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-  </main>
+      <section>
+        <div class="row d-flex justify-content-center">
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Permissions Actions</h4>
 
-  <script src="bundle.js" defer></script>
-</body>
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="requestPermissions"
+                  disabled
+                >
+                  Request Permissions
+                </button>
 
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="getPermissions"
+                  disabled
+                >
+                  Get Permissions
+                </button>
+
+                <p class="info-text alert alert-secondary">
+                  Permissions result: <span id="permissionsResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="row d-flex justify-content-center">
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4 class="card-title">Send STC</h4>
+                <h5 class="card-title">To</h5>
+                <div class="form-outline mb-3">
+                  <input
+                    id="toAccountInput"
+                    type="text"
+                    class="form-control form-control-lg"
+                    value="0x46ecE7c1e39fb6943059565E2621b312"
+                  />
+                </div>
+
+                <h5 class="card-title">Amount of STC</h5>
+                <div class="form-outline mb-3">
+                  <input
+                    id="amountInput"
+                    type="text"
+                    class="form-control form-control-lg"
+                    value="0.001"
+                  />
+                </div>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="sendButton"
+                  disabled
+                >
+                  Send
+                </button>
+                <hr />
+                <h4 class="card-title">Contract</h4>
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="callContractButton"
+                  disabled
+                >
+                  0x1::TransferScripts::peer_to_peer
+                </button>
+
+                <p class="info-text alert alert-secondary">
+                  Contract Status: <span id="contractStatus">Not clicked</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="row">
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4>Eth Sign</h4>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="ethSign"
+                  disabled
+                >
+                  Sign
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Result: <span id="ethSignResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4>Personal Sign</h4>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="personalSign"
+                  disabled
+                >
+                  Sign
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Result: <span id="personalSignResult"></span>
+                </p>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="personalSignVerify"
+                  disabled
+                >
+                  Verify
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  eth-sig-util recovery result:
+                  <span id="personalSignVerifySigUtilResult"></span>
+                </p>
+                <p class="info-text alert alert-warning">
+                  personal_ecRecover result:
+                  <span id="personalSignVerifyECRecoverResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4>Sign Typed Data</h4>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedData"
+                  disabled
+                >
+                  Sign
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Result: <span id="signTypedDataResult"></span>
+                </p>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedDataVerify"
+                  disabled
+                >
+                  Verify
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Recovery result:
+                  <span id="signTypedDataVerifyResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4>Sign Typed Data V3</h4>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedDataV3"
+                  disabled
+                >
+                  Sign
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Result:
+                  <span id="signTypedDataV3Result"></span>
+                </p>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedDataV3Verify"
+                  disabled
+                >
+                  Verify
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Recovery result:
+                  <span id="signTypedDataV3VerifyResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="
+              col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12
+              d-flex
+              align-items-stretch
+            "
+          >
+            <div class="card full-width">
+              <div class="card-body">
+                <h4>Sign Typed Data V4</h4>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedDataV4"
+                  disabled
+                >
+                  Sign
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Result:
+                  <span id="signTypedDataV4Result"></span>
+                </p>
+
+                <button
+                  class="btn btn-primary btn-lg btn-block mb-3"
+                  id="signTypedDataV4Verify"
+                  disabled
+                >
+                  Verify
+                </button>
+
+                <p class="info-text alert alert-warning">
+                  Recovery result:
+                  <span id="signTypedDataV4VerifyResult"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="bundle.js" defer></script>
+  </body>
 </html>

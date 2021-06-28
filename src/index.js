@@ -1,4 +1,11 @@
 import { arrayify, hexlify } from '@ethersproject/bytes'
+import {
+  // encrypt,
+  recoverPersonalSignature,
+  // recoverTypedSignatureLegacy,
+  // recoverTypedSignature,
+  // recoverTypedSignature_v4 as recoverTypedSignatureV4,
+} from 'eth-sig-util'
 import BigNumber from 'bignumber.js'
 import StarMaskOnboarding from '@starcoin/starmask-onboarding'
 import { providers, utils, bcs } from '@starcoin/starcoin'
@@ -30,6 +37,37 @@ const permissionsResult = document.getElementById('permissionsResult')
 // Send STC Section
 const sendButton = document.getElementById('sendButton')
 
+// Ethereum Signature Section
+// const ethSign = document.getElementById('ethSign')
+// const ethSignResult = document.getElementById('ethSignResult')
+const personalSign = document.getElementById('personalSign')
+const personalSignResult = document.getElementById('personalSignResult')
+const personalSignVerify = document.getElementById('personalSignVerify')
+const personalSignVerifySigUtilResult = document.getElementById(
+  'personalSignVerifySigUtilResult',
+)
+const personalSignVerifyECRecoverResult = document.getElementById(
+  'personalSignVerifyECRecoverResult',
+)
+// const signTypedData = document.getElementById('signTypedData')
+// const signTypedDataResult = document.getElementById('signTypedDataResult')
+// const signTypedDataVerify = document.getElementById('signTypedDataVerify')
+// const signTypedDataVerifyResult = document.getElementById(
+//   'signTypedDataVerifyResult',
+// )
+// const signTypedDataV3 = document.getElementById('signTypedDataV3')
+// const signTypedDataV3Result = document.getElementById('signTypedDataV3Result')
+// const signTypedDataV3Verify = document.getElementById('signTypedDataV3Verify')
+// const signTypedDataV3VerifyResult = document.getElementById(
+//   'signTypedDataV3VerifyResult',
+// )
+// const signTypedDataV4 = document.getElementById('signTypedDataV4')
+// const signTypedDataV4Result = document.getElementById('signTypedDataV4Result')
+// const signTypedDataV4Verify = document.getElementById('signTypedDataV4Verify')
+// const signTypedDataV4VerifyResult = document.getElementById(
+//   'signTypedDataV4VerifyResult',
+// )
+
 // Contract Section
 const callContractButton = document.getElementById('callContractButton')
 const contractStatus = document.getElementById('contractStatus')
@@ -59,6 +97,17 @@ const initialize = async () => {
     getPermissionsButton,
     sendButton,
     callContractButton,
+    // deployButton,
+    sendButton,
+    // createToken,
+    personalSign,
+    // signTypedData,
+    // getEncryptionKeyButton,
+    // ethSign,
+    personalSign,
+    // signTypedData,
+    // signTypedDataV3,
+    // signTypedDataV4,
   ]
 
   const isStarMaskConnected = () => accounts && accounts.length > 0
@@ -192,7 +241,7 @@ const initialize = async () => {
         gasLimit: 127845,
         gasPrice: 1,
       })
-      console.log(transactionHash)
+      return console.log(transactionHash)
     }
 
     /**
@@ -258,7 +307,6 @@ const initialize = async () => {
         // const payload = starcoin_types.TransactionPayload.deserialize(de)
         // console.log({ payload })
 
-
         const senderAddressHex = '0x5a2cd40212ad13a1effab6b07cf31f06'
         const senderPublicKeyHex = '0xeb7cca2a26f952e9308796dff5c0b942d49a02ca09ef9f8975d5bf5f8e546da0'
         const senderSequenceNumber = await starcoinProvider.getSequenceNumber(senderAddressHex)
@@ -306,10 +354,73 @@ const initialize = async () => {
       }
       contractStatus.innerHTML = 'Call Completed'
       callContractButton.disabled = false
+
+      return null
     }
   }
 
-  function handleNewAccounts(newAccounts) {
+  /**
+   * Personal Sign
+   */
+  personalSign.onclick = async () => {
+    const exampleMessage = 'Example `personal_sign` message'
+    try {
+      const from = accounts[0]
+      const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
+      const sign = await window.starcoin.request({
+        method: 'personal_sign',
+        params: [msg, from, 'Example password'],
+      })
+      personalSignResult.innerHTML = sign
+      personalSignVerify.disabled = false
+    } catch (err) {
+      console.error(err)
+      personalSign.innerHTML = `Error: ${err.message}`
+    }
+  }
+
+  /**
+   * Personal Sign Verify
+   */
+  personalSignVerify.onclick = async () => {
+    const exampleMessage = 'Example `personal_sign` message'
+    try {
+      const from = accounts[0]
+      const msg = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
+      const sign = personalSignResult.innerHTML
+      const recoveredAddr = recoverPersonalSignature({
+        data: msg,
+        sig: sign,
+      })
+      if (recoveredAddr === from) {
+        console.log(`SigUtil Successfully verified signer as ${recoveredAddr}`)
+        personalSignVerifySigUtilResult.innerHTML = recoveredAddr
+      } else {
+        console.log(
+          `SigUtil Failed to verify signer when comparing ${recoveredAddr} to ${from}`,
+        )
+        console.log(`Failed comparing ${recoveredAddr} to ${from}`)
+      }
+      const ecRecoverAddr = await window.starcoin.request({
+        method: 'personal_ecRecover',
+        params: [msg, sign],
+      })
+      if (ecRecoverAddr === from) {
+        console.log(`Successfully ecRecovered signer as ${ecRecoverAddr}`)
+        personalSignVerifyECRecoverResult.innerHTML = ecRecoverAddr
+      } else {
+        console.log(
+          `Failed to verify signer when comparing ${ecRecoverAddr} to ${from}`,
+        )
+      }
+    } catch (err) {
+      console.error(err)
+      personalSignVerifySigUtilResult.innerHTML = `Error: ${err.message}`
+      personalSignVerifyECRecoverResult.innerHTML = `Error: ${err.message}`
+    }
+  }
+
+  function handleNewAccounts (newAccounts) {
     accounts = newAccounts
     accountsDiv.innerHTML = accounts
     if (isStarMaskConnected()) {
@@ -318,15 +429,15 @@ const initialize = async () => {
     updateButtons()
   }
 
-  function handleNewChain(chainId) {
+  function handleNewChain (chainId) {
     chainIdDiv.innerHTML = chainId
   }
 
-  function handleNewNetwork(networkId) {
+  function handleNewNetwork (networkId) {
     networkDiv.innerHTML = networkId
   }
 
-  async function getNetworkAndChainId() {
+  async function getNetworkAndChainId () {
     try {
       const chainInfo = await window.starcoin.request({
         method: 'chain.id',
